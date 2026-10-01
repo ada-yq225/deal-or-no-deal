@@ -5,116 +5,58 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>成交？还是不成交</title>
 <style>
-  :root {
-    --bg: #140910;
-    --rose: #ff4d7a;
-    --gold: #f0c27a;
-    --cream: #fff4ea;
-    --dim: #b89aa6;
-    --line: rgba(255,180,200,.18);
-  }
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  :root { --bg:#140910; --rose:#ff4d7a; --gold:#f0c27a; --cream:#fff4ea; --dim:#b89aa6; --line:rgba(255,180,200,.18); }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   body {
-    margin: 0;
-    min-height: 100dvh;
-    font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif;
-    background:
-      radial-gradient(900px 500px at 80% -10%, rgba(255,77,122,.28), transparent 60%),
-      radial-gradient(700px 400px at -10% 100%, rgba(240,194,122,.12), transparent 55%),
-      var(--bg);
-    color: var(--cream);
+    margin:0; min-height:100dvh;
+    font-family:"PingFang SC","Hiragino Sans GB","Noto Sans SC",sans-serif;
+    background:radial-gradient(900px 500px at 80% -10%, rgba(255,77,122,.28), transparent 60%), radial-gradient(700px 400px at -10% 100%, rgba(240,194,122,.12), transparent 55%), var(--bg);
+    color:var(--cream);
   }
-  .wrap { max-width: 520px; margin: 0 auto; padding: 18px 14px 48px; }
-  h1 { font-size: 26px; margin: 6px 0 4px; }
-  h1 span { color: var(--rose); }
-  .sub { color: var(--dim); font-size: 13px; line-height: 1.55; margin-bottom: 14px; }
-  .panel {
-    background: rgba(36,16,24,.82);
-    border: 1px solid var(--line);
-    border-radius: 18px;
-    padding: 14px;
-    margin-bottom: 12px;
-  }
-  label { display: block; font-size: 12px; color: var(--dim); margin: 8px 0 6px; }
-  input, select {
-    width: 100%;
-    background: #1a0c12;
-    color: var(--cream);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 12px;
-    font-size: 16px;
-  }
-  .row { display: flex; gap: 8px; }
-  .row > * { flex: 1; }
-  button {
-    border: 0;
-    border-radius: 14px;
-    padding: 13px 14px;
-    font-size: 15px;
-    font-weight: 700;
-    color: white;
-    background: linear-gradient(180deg, #ff6d93, #e23b68);
-    box-shadow: 0 8px 20px rgba(226,59,104,.28);
-  }
-  button.ghost { background: transparent; border: 1px solid var(--line); color: var(--cream); box-shadow: none; }
-  button.gold { background: linear-gradient(180deg, #ffe0a8, #e0a85a); color: #3a2412; box-shadow: 0 8px 20px rgba(224,168,90,.25); }
-  button:disabled { opacity: .45; }
-  .hidden { display: none !important; }
-  .topbar { display: flex; justify-content: space-between; gap: 8px; align-items: center; margin-bottom: 10px; }
-  .pill { font-size: 12px; padding: 6px 10px; border-radius: 999px; background: rgba(255,77,122,.15); color: #ffd0dc; border: 1px solid var(--line); }
-  .mine { display: flex; align-items: center; gap: 10px; }
-  .case {
-    width: 58px; height: 46px; border-radius: 10px;
-    background: linear-gradient(180deg, #ffd7e4, #ff4d7a);
-    color: #3b1020; font-weight: 800; display: grid; place-items: center;
-  }
-  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
-  .grid button.casebtn {
-    height: 54px; border-radius: 12px;
-    background: linear-gradient(180deg, #3a1c28, #241018);
-    border: 1px solid rgba(255,180,200,.22);
-    color: var(--gold); box-shadow: none; font-size: 16px;
-  }
-  .grid button.casebtn.mine { outline: 2px solid var(--gold); color: white; }
-  .grid button.casebtn.open { opacity: .35; text-decoration: line-through; }
-  .board { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-  .prize {
-    font-size: 12px; padding: 8px; border-radius: 10px;
-    background: #1c0d14; border: 1px solid var(--line);
-    display: flex; justify-content: space-between; gap: 6px;
-  }
-  .prize b { color: var(--gold); font-weight: 700; }
-  .prize.gone { opacity: .28; text-decoration: line-through; }
-  .prize.hot b { color: var(--rose); }
-  .prize.custom b { color: #ffd0a8; }
-  .log { font-size: 13px; line-height: 1.55; color: #ffd9e4; min-height: 44px; }
-  .modal {
-    position: fixed; inset: 0; background: rgba(8,2,6,.72);
-    display: grid; place-items: end center; padding: 12px; z-index: 5;
-  }
-  .sheet {
-    width: min(500px, 100%);
-    background: #2a121c;
-    border: 1px solid var(--line);
-    border-radius: 22px 22px 16px 16px;
-    padding: 18px 16px 16px;
-    max-height: 88dvh;
-    overflow: auto;
-  }
-  .sheet h2 { margin: 0 0 6px; font-size: 20px; }
-  .offer { font-size: 22px; color: var(--gold); margin: 8px 0 12px; line-height: 1.35; }
-  .tiny { color: var(--dim); font-size: 12px; line-height: 1.5; }
-  .timer { height: 6px; border-radius: 99px; background: #3a2030; overflow: hidden; margin: 8px 0 12px; }
-  .timer > div { height: 100%; width: 100%; background: linear-gradient(90deg, var(--gold), var(--rose)); }
-  .cond { color: #ffd0dc; font-size: 14px; margin-bottom: 8px; }
+  .wrap { max-width:520px; margin:0 auto; padding:18px 14px 48px; }
+  h1 { font-size:26px; margin:6px 0 4px; } h1 span { color:var(--rose); }
+  .sub { color:var(--dim); font-size:13px; line-height:1.55; margin-bottom:14px; }
+  .panel { background:rgba(36,16,24,.82); border:1px solid var(--line); border-radius:18px; padding:14px; margin-bottom:12px; }
+  label { display:block; font-size:12px; color:var(--dim); margin:8px 0 6px; }
+  input, select { width:100%; background:#1a0c12; color:var(--cream); border:1px solid var(--line); border-radius:12px; padding:12px; font-size:16px; }
+  .row { display:flex; gap:8px; } .row > * { flex:1; }
+  button { border:0; border-radius:14px; padding:13px 14px; font-size:15px; font-weight:700; color:white; background:linear-gradient(180deg,#ff6d93,#e23b68); }
+  button.ghost { background:transparent; border:1px solid var(--line); color:var(--cream); }
+  button.gold { background:linear-gradient(180deg,#ffe0a8,#e0a85a); color:#3a2412; }
+  button.tinybtn { padding:8px 10px; font-size:12px; border-radius:10px; }
+  button:disabled { opacity:.45; }
+  .hidden { display:none !important; }
+  .topbar { display:flex; justify-content:space-between; gap:8px; align-items:center; margin-bottom:10px; }
+  .pill { font-size:12px; padding:6px 10px; border-radius:999px; background:rgba(255,77,122,.15); color:#ffd0dc; border:1px solid var(--line); }
+  .mine { display:flex; align-items:center; gap:10px; }
+  .case { width:58px; height:46px; border-radius:10px; background:linear-gradient(180deg,#ffd7e4,#ff4d7a); color:#3b1020; font-weight:800; display:grid; place-items:center; }
+  .grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+  .grid button.casebtn { height:54px; border-radius:12px; background:linear-gradient(180deg,#3a1c28,#241018); border:1px solid rgba(255,180,200,.22); color:var(--gold); font-size:16px; }
+  .grid button.casebtn.mine { outline:2px solid var(--gold); color:white; }
+  .grid button.casebtn.open { opacity:.35; text-decoration:line-through; }
+  .board { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+  .prize { font-size:12px; padding:8px; border-radius:10px; background:#1c0d14; border:1px solid var(--line); display:flex; justify-content:space-between; gap:6px; }
+  .prize b { color:var(--gold); font-weight:700; } .prize.gone { opacity:.28; text-decoration:line-through; } .prize.hot b { color:var(--rose); } .prize.custom b { color:#ffd0a8; }
+  .log { font-size:13px; line-height:1.55; color:#ffd9e4; min-height:44px; }
+  .modal { position:fixed; inset:0; background:rgba(8,2,6,.72); display:grid; place-items:end center; padding:12px; z-index:5; }
+  .sheet { width:min(500px,100%); background:#2a121c; border:1px solid var(--line); border-radius:22px 22px 16px 16px; padding:18px 16px 16px; max-height:88dvh; overflow:auto; }
+  .sheet h2 { margin:0 0 6px; font-size:20px; }
+  .offer { font-size:22px; color:var(--gold); margin:8px 0 12px; line-height:1.35; }
+  .tiny { color:var(--dim); font-size:12px; line-height:1.5; }
+  .timer { height:6px; border-radius:99px; background:#3a2030; overflow:hidden; margin:8px 0 12px; }
+  .timer > div { height:100%; width:100%; background:linear-gradient(90deg,var(--gold),var(--rose)); }
+  .cond { color:#ffd0dc; font-size:14px; margin-bottom:8px; }
+  .pick { display:flex; gap:8px; align-items:flex-start; padding:8px 0; border-bottom:1px solid rgba(255,180,200,.08); font-size:13px; }
+  .pick input { width:18px; height:18px; margin-top:2px; flex:none; }
+  .tag { font-size:10px; border-radius:99px; padding:2px 6px; margin-right:6px; }
+  .h1 { background:#3a2430; color:#ffd0dc; } .h2 { background:#4a2430; color:#ffb0c4; } .h3 { background:#5a2030; color:#ff8aa6; } .h4 { background:#6a1830; color:#ff6d93; } .h5 { background:#7a1028; color:#fff; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div id="setup">
     <h1>成交？<span>还是不成交</span></h1>
-    <p class="sub">一个人锁箱子，另一个人当资本家。报价可以自己改，烫箱子开出来要先受一小罚，最后还能求着换箱子。</p>
+    <p class="sub">先勾这场允许出现的任务。勾满 26 个正好一箱一个；多了就从勾过的里抽 26 个；少了就按你勾的数量开。</p>
     <div class="panel">
       <label>玩箱子的人</label>
       <input id="name" value="宝贝" maxlength="12" />
@@ -129,13 +71,21 @@
       <input id="c1" placeholder="比如：含着我的手指亲 20 秒" maxlength="28" />
       <label>对方私下塞进去的任务（你把手机转过去）</label>
       <input id="c2" placeholder="比如：今晚由我选姿势" maxlength="28" />
+    </div>
+    <div class="panel">
+      <div class="row">
+        <button class="ghost tinybtn" id="onlySweet" type="button">只留甜的</button>
+        <button class="ghost tinybtn" id="uptoWarm" type="button">甜到微烫</button>
+        <button class="ghost tinybtn" id="allTasks" type="button">全要</button>
+      </div>
+      <p class="tiny" id="pickCount" style="margin:10px 0">已选 0</p>
+      <div id="picker"></div>
       <div class="row" style="margin-top:12px">
         <button id="start">开始锁箱子</button>
       </div>
-      <p class="tiny">自定义任务会替换两个中等箱子。不想写就留空。做到不舒服就停。</p>
+      <p class="tiny">至少勾 6 个。做到不舒服就停。</p>
     </div>
   </div>
-
   <div id="game" class="hidden">
     <div class="topbar">
       <div class="mine">
@@ -152,13 +102,12 @@
       <div class="grid" id="grid"></div>
     </div>
     <div class="panel">
-      <div class="tiny" style="margin-bottom:8px">还在场上的任务 · 金边是你们自己塞的</div>
+      <div class="tiny" style="margin-bottom:8px">还在场上的任务</div>
       <div class="board" id="board"></div>
     </div>
     <button class="ghost" id="restart" style="width:100%">重开一局</button>
   </div>
 </div>
-
 <div id="modal" class="modal hidden">
   <div class="sheet">
     <div class="tiny" id="mWho">资本家来电</div>
@@ -183,155 +132,178 @@
     <button class="ghost hidden" id="swapBtn" style="width:100%;margin-top:8px">求资本家换箱子</button>
   </div>
 </div>
-
 <script>
-const BASE = [
-  { id: 1, text: "捏脸 10 秒", heat: 1, ev: 8 },
-  { id: 2, text: "说一句只给对方听的骚话", heat: 1, ev: 12 },
-  { id: 3, text: "耳边吹气到起鸡皮", heat: 1, ev: 15 },
-  { id: 4, text: "公主抱走到门口再回来", heat: 1, ev: 18 },
-  { id: 5, text: "喂对方吃一口东西", heat: 1, ev: 20 },
-  { id: 6, text: "手伸进衣服里停 20 秒", heat: 2, ev: 35 },
-  { id: 7, text: "湿吻 30 秒，不准逃", heat: 2, ev: 40 },
-  { id: 8, text: "坐到腿上亲到求饶", heat: 2, ev: 48 },
-  { id: 9, text: "脱掉一件衣服", heat: 2, ev: 55 },
-  { id: 10, text: "全身按摩 5 分钟，手可以不老实", heat: 2, ev: 60 },
-  { id: 11, text: "用嘴解开一颗扣子或裤绳", heat: 3, ev: 80 },
-  { id: 12, text: "蒙眼让对方随便摸 1 分钟", heat: 3, ev: 90 },
-  { id: 13, text: "听指挥摆一个姿势拍照留着", heat: 3, ev: 100 },
-  { id: 14, text: "绑住手腕玩 2 分钟", heat: 3, ev: 120 },
-  { id: 15, text: "只留内衣，其余脱掉", heat: 3, ev: 140 },
-  { id: 16, text: "跪好，让对方决定下一句命令", heat: 4, ev: 180 },
-  { id: 17, text: "用嘴服务 1 分钟，对方说停才停", heat: 4, ev: 220 },
-  { id: 18, text: "当 10 分钟小狗 / 主人，对方选", heat: 4, ev: 260 },
-  { id: 19, text: "脱掉所有，只准留一件", heat: 4, ev: 300 },
-  { id: 20, text: "任对方挑姿势来一回，做到对方喊停", heat: 5, ev: 420 },
-  { id: 21, text: "口到对方舒服，中途不许说话", heat: 5, ev: 480 },
-  { id: 22, text: "今晚主导权全交出去", heat: 5, ev: 560 },
-  { id: 23, text: "按对方最想要的方式做一次", heat: 5, ev: 640 },
-  { id: 24, text: "连续两次，中间只准喝水", heat: 5, ev: 760 },
-  { id: 25, text: "今晚说到做到的空白支票一张", heat: 5, ev: 880 },
-  { id: 26, text: "大奖：对方点名的任何一件事，现在就做", heat: 5, ev: 1000 }
+const POOL = [
+  { text:"捏脸 10 秒", heat:1, ev:8 },
+  { text:"对视 15 秒不准笑", heat:1, ev:10 },
+  { text:"十指相扣走一圈", heat:1, ev:12 },
+  { text:"说一句只给对方听的骚话", heat:1, ev:14 },
+  { text:"耳边吹气到起鸡皮", heat:1, ev:16 },
+  { text:"叫三声好听的，对方指定", heat:1, ev:18 },
+  { text:"公主抱走到门口再回来", heat:1, ev:20 },
+  { text:"喂对方吃一口东西", heat:1, ev:22 },
+  { text:"摸头发直到对方说停", heat:1, ev:24 },
+  { text:"额头吻一下，再补一个脸颊", heat:1, ev:26 },
+  { text:"夸对方身体一个具体的地方", heat:1, ev:28 },
+  { text:"让对方靠在肩上待 1 分钟", heat:1, ev:30 },
+  { text:"手伸进衣服里停 20 秒", heat:2, ev:36 },
+  { text:"湿吻 30 秒，不准逃", heat:2, ev:42 },
+  { text:"坐到腿上亲到求饶", heat:2, ev:48 },
+  { text:"脱掉一件衣服", heat:2, ev:54 },
+  { text:"全身按摩 5 分钟，手可以不老实", heat:2, ev:60 },
+  { text:"咬一下耳朵，再含一下耳垂", heat:2, ev:66 },
+  { text:"从锁骨亲到下巴", heat:2, ev:70 },
+  { text:"隔着衣服揉 30 秒", heat:2, ev:76 },
+  { text:"用对方的嘴喝一口水", heat:2, ev:80 },
+  { text:"让对方把腿搭上来", heat:2, ev:84 },
+  { text:"用嘴解开一颗扣子或裤绳", heat:3, ev:96 },
+  { text:"蒙眼让对方随便摸 1 分钟", heat:3, ev:108 },
+  { text:"听指挥摆一个姿势拍照留着", heat:3, ev:118 },
+  { text:"绑住手腕玩 2 分钟", heat:3, ev:130 },
+  { text:"只留内衣，其余脱掉", heat:3, ev:142 },
+  { text:"含住对方手指，眼睛看着对方", heat:3, ev:150 },
+  { text:"把对方按在墙上亲到换气", heat:3, ev:160 },
+  { text:"自己把内裤边拨开给对方看一眼", heat:3, ev:170 },
+  { text:"用膝盖顶着对方磨 30 秒", heat:3, ev:180 },
+  { text:"说出现在最想被碰的地方", heat:3, ev:188 },
+  { text:"跪好，让对方决定下一句命令", heat:4, ev:210 },
+  { text:"用嘴服务 1 分钟，对方说停才停", heat:4, ev:240 },
+  { text:"当 10 分钟小狗 / 主人，对方选", heat:4, ev:270 },
+  { text:"脱掉所有，只准留一件", heat:4, ev:300 },
+  { text:"让对方看着你自己摸 1 分钟", heat:4, ev:330 },
+  { text:"把脸埋到对方腿间，只准呼吸", heat:4, ev:360 },
+  { text:"被按着后颈亲，不准推开", heat:4, ev:380 },
+  { text:"内衣脱掉，用手遮，让对方挪开", heat:4, ev:400 },
+  { text:"任对方挑姿势来一回，做到对方喊停", heat:5, ev:460 },
+  { text:"口到对方舒服，中途不许说话", heat:5, ev:520 },
+  { text:"今晚主导权全交出去", heat:5, ev:580 },
+  { text:"按对方最想要的方式做一次", heat:5, ev:660 },
+  { text:"连续两次，中间只准喝水", heat:5, ev:760 },
+  { text:"今晚说到做到的空白支票一张", heat:5, ev:860 },
+  { text:"大奖：对方点名的任何一件事，现在就做", heat:5, ev:1000 },
+  { text:"从后面抱着进来，慢的那种", heat:5, ev:700 },
+  { text:"射在对方指定的地方", heat:5, ev:820 },
+  { text:"做到对方求饶还不准停，除非喊安全词", heat:5, ev:940 }
 ];
-const INSTANT = ["先亲锁骨 10 秒", "把手放在对方腰上不许挪", "说一句刚才不敢说的话", "让对方咬一下耳朵", "含住对方手指再继续"];
-const ROUNDS = [6, 5, 4, 3, 2, 1, 1, 1];
-const state = { name: "宝贝", banker: "宝宝", mode: "forPlayer", boxes: [], mine: null, round: 0, need: 0, phase: "pick", alive: [], offer: null, offerIndex: 0, pending: null };
+const INSTANT = ["先亲锁骨 10 秒","把手放在对方腰上不许挪","说一句刚才不敢说的话","让对方咬一下耳朵","含住对方手指再继续"];
+const state = { name:"宝贝", banker:"宝宝", mode:"forPlayer", boxes:[], mine:null, round:0, need:0, phase:"pick", alive:[], offer:null, offerIndex:0, pending:null, board:[] };
 const $ = (id) => document.getElementById(id);
 let timer = null;
-
-function shuffle(arr) {
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-function whoDoes() {
-  return state.mode === "forPlayer" ? "对方做给玩箱子的人" : "玩箱子的人做给对方";
-}
+function shuffle(arr) { const a = arr.slice(); for (let i=a.length-1;i>0;i--) { const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function whoDoes() { return state.mode==="forPlayer" ? "对方做给玩箱子的人" : "玩箱子的人做给对方"; }
 function buzz(ms) { if (navigator.vibrate) navigator.vibrate(ms); }
 function say(t) { $("log").textContent = t; }
+function heatName(h) { return ["","甜","暧","烫","很烫","过分"][h]; }
 
+function renderPicker() {
+  const box = $("picker");
+  box.innerHTML = "";
+  POOL.forEach((p, i) => {
+    const row = document.createElement("label");
+    row.className = "pick";
+    row.innerHTML = '<input type="checkbox" data-i="'+i+'" '+(p.heat<=3?"checked":"")+'><span><span class="tag h'+p.heat+'">'+heatName(p.heat)+'</span>'+p.text+'</span>';
+    box.appendChild(row);
+  });
+  box.onchange = updateCount;
+  updateCount();
+}
+function selectedIndexes() { return [...document.querySelectorAll("#picker input:checked")].map(el => +el.dataset.i); }
+function updateCount() {
+  const n = selectedIndexes().length;
+  $("pickCount").textContent = "已选 " + n + " 个" + (n>26 ? "，开局会随机抽 26 个" : n<6 ? "，至少要 6 个" : "");
+}
+function setHeat(max) {
+  document.querySelectorAll("#picker input").forEach(el => { el.checked = POOL[+el.dataset.i].heat <= max; });
+  updateCount();
+}
+function roundsFor(n) {
+  const openable = n - 1;
+  const plan = [];
+  let left = openable;
+  [6,5,4,3,2,1,1,1].forEach(step => { if (left<=0) return; const take = Math.min(step, left); plan.push(take); left -= take; });
+  return plan.length ? plan : [1];
+}
 function start() {
+  const idxs = selectedIndexes();
+  if (idxs.length < 6) { $("pickCount").textContent = "至少勾 6 个，不然没得赌。"; return; }
   state.name = $("name").value.trim() || "宝贝";
   state.banker = $("bankerName").value.trim() || "宝宝";
   state.mode = $("mode").value;
-  const prizes = BASE.map(p => ({ ...p }));
+  let prizes = idxs.map((i, k) => ({ ...POOL[i], id:k+1 }));
   const c1 = $("c1").value.trim();
   const c2 = $("c2").value.trim();
-  if (c1) prizes[9] = { id: 10, text: "私货 · " + c1, heat: 3, ev: 110, custom: true };
-  if (c2) prizes[14] = { id: 15, text: "私货 · " + c2, heat: 4, ev: 200, custom: true };
-  const shuffled = shuffle(prizes);
-  state.boxes = shuffled.map((p, i) => ({ n: i + 1, prize: p, open: false, mine: false }));
-  state.mine = null;
-  state.round = 0;
-  state.need = 0;
-  state.phase = "pick";
+  if (c1) prizes.push({ id:900, text:"私货 · "+c1, heat:3, ev:150, custom:true });
+  if (c2) prizes.push({ id:901, text:"私货 · "+c2, heat:4, ev:260, custom:true });
+  prizes = shuffle(prizes).slice(0, 26).map((p,i) => ({ ...p, id:i+1 }));
+  state.board = prizes;
+  state.rounds = roundsFor(prizes.length);
+  state.boxes = prizes.map((p,i) => ({ n:i+1, prize:p, open:false, mine:false }));
+  state.mine = null; state.round = 0; state.need = 0; state.phase = "pick";
   state.alive = prizes.map(p => p.id);
   $("setup").classList.add("hidden");
   $("game").classList.remove("hidden");
   $("who").textContent = state.name + " 的箱子";
-  say(state.name + " 先锁一个。锁完 " + state.banker + " 来当资本家，报价她说了算。");
+  $("grid").style.gridTemplateColumns = prizes.length > 20 ? "repeat(5,1fr)" : "repeat(4,1fr)";
+  say(state.name + " 先锁一个。这场一共 " + prizes.length + " 个箱子。");
   render();
 }
-
 function alivePrizes() { return state.boxes.filter(b => !b.open).map(b => b.prize); }
-
 function render() {
   const grid = $("grid");
   grid.innerHTML = "";
   state.boxes.forEach(b => {
     const btn = document.createElement("button");
-    btn.className = "casebtn" + (b.mine ? " mine" : "") + (b.open ? " open" : "");
+    btn.className = "casebtn" + (b.mine?" mine":"") + (b.open?" open":"");
     btn.textContent = b.open ? "开" : b.n;
-    btn.disabled = b.open || b.mine || state.phase === "offer" || state.phase === "penalty" || state.phase === "done";
+    btn.disabled = b.open || b.mine || state.phase==="offer" || state.phase==="penalty" || state.phase==="done";
     btn.onclick = () => onBox(b.n);
     grid.appendChild(btn);
   });
   $("myCase").textContent = state.mine || "?";
-  $("leftPill").textContent = state.phase === "pick" ? "选箱子" : ("场上 " + alivePrizes().length);
+  $("leftPill").textContent = state.phase==="pick" ? "选箱子" : ("场上 "+alivePrizes().length);
   $("roundLabel").textContent = roundText();
   const board = $("board");
   board.innerHTML = "";
-  const all = [];
-  state.boxes.forEach(b => all.push(b.prize));
-  all.sort((a, b) => a.ev - b.ev);
-  all.forEach(p => {
+  state.board.slice().sort((a,b)=>a.ev-b.ev).forEach(p => {
     const gone = !state.alive.includes(p.id);
     const el = document.createElement("div");
-    el.className = "prize" + (gone ? " gone" : "") + (p.heat >= 4 ? " hot" : "") + (p.custom ? " custom" : "");
-    el.innerHTML = "<span>" + (p.custom ? "私" : (p.heat >= 4 ? "烫" : "甜")) + "</span><b>" + p.text + "</b>";
+    el.className = "prize"+(gone?" gone":"")+(p.heat>=4?" hot":"")+(p.custom?" custom":"");
+    el.innerHTML = "<span>"+(p.custom?"私":heatName(p.heat))+"</span><b>"+p.text+"</b>";
     board.appendChild(el);
   });
 }
 function roundText() {
-  if (state.phase === "pick") return "先选你的箱子";
-  if (state.phase === "done") return "这局结束了";
-  if (state.phase === "offer") return state.banker + " 在改报价";
-  if (state.phase === "penalty") return "先把小罚做了";
-  return "第 " + (state.round + 1) + " 轮 · 还要开 " + state.need + " 个";
+  if (state.phase==="pick") return "先选你的箱子";
+  if (state.phase==="done") return "这局结束了";
+  if (state.phase==="offer") return state.banker+" 在改报价";
+  if (state.phase==="penalty") return "先把小罚做了";
+  return "第 "+(state.round+1)+" 轮 · 还要开 "+state.need+" 个";
 }
-
 function onBox(n) {
-  const b = state.boxes[n - 1];
-  if (state.phase === "pick") {
-    b.mine = true;
-    state.mine = n;
-    state.phase = "open";
-    state.need = ROUNDS[0];
-    say("锁的是 " + n + " 号。把手机给 " + state.banker + " 也行，让她看着你开。先开 " + state.need + " 个。");
-    render();
-    return;
+  const b = state.boxes[n-1];
+  if (state.phase==="pick") {
+    b.mine = true; state.mine = n; state.phase = "open"; state.need = state.rounds[0];
+    say("锁的是 "+n+" 号。先开 "+state.need+" 个。");
+    render(); return;
   }
-  if (state.phase !== "open" || b.mine || b.open) return;
+  if (state.phase!=="open" || b.mine || b.open) return;
   b.open = true;
-  state.alive = state.alive.filter(id => id !== b.prize.id);
+  state.alive = state.alive.filter(id => id!==b.prize.id);
   state.need--;
   buzz(40);
-  const hot = b.prize.heat >= 4;
-  say((hot ? "烫的被开掉了：" : "开掉的是甜的：") + b.prize.text);
+  say((b.prize.heat>=4?"烫的被开掉了：":"开掉的是：")+b.prize.text);
   render();
-  if (alivePrizes().length <= 1) {
-    finish(state.boxes.find(x => x.mine).prize, "别的全开完了。");
-    return;
-  }
-  if (hot) {
-    state.pending = state.need <= 0 ? "offer" : "open";
-    penalty(b.prize.text);
-    return;
-  }
-  if (state.need <= 0) offer();
+  if (alivePrizes().length<=1) { finish(state.boxes.find(x=>x.mine).prize, "别的全开完了。"); return; }
+  if (b.prize.heat>=4) { state.pending = state.need<=0 ? "offer" : "open"; penalty(b.prize.text); return; }
+  if (state.need<=0) offer();
 }
-
 function penalty(opened) {
   state.phase = "penalty";
-  const dare = INSTANT[Math.floor(Math.random() * INSTANT.length)];
   $("mWho").textContent = "当场小罚";
   $("mTitle").textContent = "烫的开掉了";
-  $("mOffer").textContent = dare;
+  $("mOffer").textContent = INSTANT[Math.floor(Math.random()*INSTANT.length)];
   $("mCond").textContent = "";
-  $("mNote").textContent = "开掉「" + opened + "」不能白开。这个小罚现在就做，做完再继续。方向仍按你们一开始选的来。";
+  $("mNote").textContent = "开掉「"+opened+"」不能白开。这个小罚现在就做。";
   $("bankerTools").classList.add("hidden");
   $("swapBtn").classList.add("hidden");
   $("timer").classList.add("hidden");
@@ -340,63 +312,40 @@ function penalty(opened) {
   $("dealBtn").onclick = () => {
     $("modal").classList.add("hidden");
     $("noDealBtn").classList.remove("hidden");
-    if (state.pending === "offer") offer();
-    else { state.phase = "open"; render(); }
+    if (state.pending==="offer") offer(); else { state.phase="open"; render(); }
   };
   $("modal").classList.remove("hidden");
   render();
 }
-
-function expected() {
-  const list = alivePrizes();
-  return list.reduce((s, p) => s + p.ev, 0) / list.length;
-}
-function offerLadder() {
-  const list = alivePrizes().slice().sort((a, b) => a.ev - b.ev);
-  const ratio = [0.32, 0.4, 0.5, 0.62, 0.74, 0.86, 0.94, 1][Math.min(state.round, 7)];
-  const target = expected() * ratio;
+function expected() { const list = alivePrizes(); return list.reduce((s,p)=>s+p.ev,0)/list.length; }
+function offer() {
+  state.phase = "offer";
+  const list = alivePrizes().slice().sort((a,b)=>a.ev-b.ev);
+  const ratio = [0.32,0.4,0.5,0.62,0.74,0.86,0.94,1][Math.min(state.round,7)];
   let idx = 0;
-  list.forEach((p, i) => { if (p.ev <= target) idx = i; });
-  return { list, idx };
+  list.forEach((p,i)=>{ if (p.ev<=expected()*ratio) idx=i; });
+  state.ladder = list; state.offerIndex = idx; state.offer = list[idx]; state.condition = "";
+  $("condInput").value = "";
+  buzz([80,40,80]);
+  showOffer(false);
+  $("dealBtn").onclick = sendOffer;
+  $("noDealBtn").onclick = () => { $("modal").classList.add("hidden"); nextRound("资本家这轮懒得压你。"); };
+  $("modal").classList.remove("hidden");
+  render();
 }
-
 function showOffer(fromBanker) {
-  const p = state.offer;
-  $("mWho").textContent = fromBanker ? (state.banker + " 把电话递过来了") : (state.banker + " 正在打电话");
+  $("mWho").textContent = fromBanker ? (state.banker+" 把电话递过来了") : (state.banker+" 正在打电话");
   $("mTitle").textContent = fromBanker ? "接不接这单" : "先让资本家改价";
-  $("mOffer").textContent = p.text;
-  $("mCond").textContent = state.condition ? ("附赠：" + state.condition) : "";
-  $("mNote").textContent = fromBanker
-    ? ("场上期望大约 " + Math.round(expected()) + " 点。15 秒不按，默认不成交。方向：" + whoDoes())
-    : "手机转给资本家。她可以抠一点、放甜一点，再写一条成交也得先做的条件。";
+  $("mOffer").textContent = state.offer.text;
+  $("mCond").textContent = state.condition ? ("附赠："+state.condition) : "";
+  $("mNote").textContent = fromBanker ? ("场上期望大约 "+Math.round(expected())+" 点。15 秒不按，默认不成交。方向："+whoDoes()) : "手机转给资本家。她可以改价，再写一条成交也得先做的条件。";
   $("bankerTools").classList.toggle("hidden", fromBanker);
   $("timer").classList.toggle("hidden", !fromBanker);
   $("dealBtn").textContent = fromBanker ? "成交" : "报价发出去";
   $("noDealBtn").textContent = fromBanker ? "不成交" : "这轮不压价";
   $("noDealBtn").classList.remove("hidden");
-  const late = alivePrizes().length <= 3;
-  $("swapBtn").classList.toggle("hidden", !(fromBanker && late));
+  $("swapBtn").classList.toggle("hidden", !(fromBanker && alivePrizes().length<=3));
 }
-
-function offer() {
-  state.phase = "offer";
-  const ladder = offerLadder();
-  state.ladder = ladder.list;
-  state.offerIndex = ladder.idx;
-  state.offer = ladder.list[ladder.idx];
-  state.condition = "";
-  $("condInput").value = "";
-  buzz([80, 40, 80]);
-  showOffer(false);
-  $("dealBtn").onclick = sendOffer;
-  $("noDealBtn").onclick = () => {
-    $("modal").classList.add("hidden");
-    nextRound("资本家这轮懒得压你。");
-  };
-  $("modal").classList.remove("hidden");
-  render();
-}
-
 function sendOffer() {
   state.condition = $("condInput").value.trim();
   showOffer(true);
@@ -406,52 +355,31 @@ function sendOffer() {
   clearInterval(timer);
   timer = setInterval(() => {
     left -= 0.1;
-    bar.style.width = Math.max(0, left / 15 * 100) + "%";
-    if (left <= 0) {
-      clearInterval(timer);
-      $("modal").classList.add("hidden");
-      nextRound("15 秒没敢按，当成不成交。");
-    }
+    bar.style.width = Math.max(0, left/15*100)+"%";
+    if (left<=0) { clearInterval(timer); $("modal").classList.add("hidden"); nextRound("15 秒没敢按，当成不成交。"); }
   }, 100);
-  $("dealBtn").onclick = () => {
-    clearInterval(timer);
-    $("modal").classList.add("hidden");
-    const extra = state.condition ? (" 另外先做：" + state.condition + "。") : "";
-    finish(state.offer, state.name + " 成交了。" + extra);
-  };
-  $("noDealBtn").onclick = () => {
-    clearInterval(timer);
-    $("modal").classList.add("hidden");
-    nextRound(state.name + " 拒绝了。");
-  };
+  $("dealBtn").onclick = () => { clearInterval(timer); $("modal").classList.add("hidden"); finish(state.offer, state.name+" 成交了。"+(state.condition?(" 另外先做："+state.condition+"。"):"")); };
+  $("noDealBtn").onclick = () => { clearInterval(timer); $("modal").classList.add("hidden"); nextRound(state.name+" 拒绝了。"); };
   $("swapBtn").onclick = () => {
     clearInterval(timer);
     const others = state.boxes.filter(b => !b.open && !b.mine);
     if (!others.length) return;
-    const pick = others[Math.floor(Math.random() * others.length)];
+    const pick = others[Math.floor(Math.random()*others.length)];
     const mine = state.boxes.find(b => b.mine);
-    mine.mine = false;
-    pick.mine = true;
-    state.mine = pick.n;
+    mine.mine = false; pick.mine = true; state.mine = pick.n;
     $("modal").classList.add("hidden");
-    say(state.banker + " 同意换了。现在锁的是 " + pick.n + " 号。这轮报价作废，继续开。");
-    nextRound("换完了。");
+    nextRound("换成 "+pick.n+" 号了。");
   };
 }
-
 function nextRound(msg) {
   state.round++;
-  const leftOpenable = alivePrizes().length - 1;
-  if (leftOpenable <= 0) {
-    finish(state.boxes.find(x => x.mine).prize, msg);
-    return;
-  }
-  state.need = Math.min(ROUNDS[Math.min(state.round, ROUNDS.length - 1)], leftOpenable);
+  const leftOpenable = alivePrizes().length-1;
+  if (leftOpenable<=0) { finish(state.boxes.find(x=>x.mine).prize, msg); return; }
+  state.need = Math.min(state.rounds[Math.min(state.round, state.rounds.length-1)] || 1, leftOpenable);
   state.phase = "open";
-  say(msg + " 再开 " + state.need + " 个。");
+  say(msg+" 再开 "+state.need+" 个。");
   render();
 }
-
 function finish(prize, lead) {
   clearInterval(timer);
   state.phase = "done";
@@ -459,8 +387,8 @@ function finish(prize, lead) {
   $("mWho").textContent = "这局落定";
   $("mTitle").textContent = "结果";
   $("mOffer").textContent = prize.text;
-  $("mCond").textContent = state.condition ? ("还欠一条：" + state.condition) : "";
-  $("mNote").textContent = lead + " 方向：" + whoDoes() + "。你锁的 " + mine.n + " 号里其实是：「" + mine.prize.text + "」。";
+  $("mCond").textContent = state.condition ? ("还欠一条："+state.condition) : "";
+  $("mNote").textContent = lead+" 方向："+whoDoes()+"。你锁的 "+mine.n+" 号里其实是：「"+mine.prize.text+"」。";
   $("bankerTools").classList.add("hidden");
   $("timer").classList.add("hidden");
   $("swapBtn").classList.add("hidden");
@@ -468,33 +396,19 @@ function finish(prize, lead) {
   $("noDealBtn").textContent = "再来一局";
   $("noDealBtn").classList.remove("hidden");
   $("dealBtn").onclick = () => $("modal").classList.add("hidden");
-  $("noDealBtn").onclick = () => {
-    $("modal").classList.add("hidden");
-    $("setup").classList.remove("hidden");
-    $("game").classList.add("hidden");
-  };
+  $("noDealBtn").onclick = () => { $("modal").classList.add("hidden"); $("setup").classList.remove("hidden"); $("game").classList.add("hidden"); };
   $("modal").classList.remove("hidden");
-  say(lead + " 落定：" + prize.text);
+  say(lead+" 落定："+prize.text);
   render();
 }
-
-$("meaner").onclick = () => {
-  state.offerIndex = Math.max(0, state.offerIndex - 1);
-  state.offer = state.ladder[state.offerIndex];
-  $("mOffer").textContent = state.offer.text;
-};
-$("sweeter").onclick = () => {
-  state.offerIndex = Math.min(state.ladder.length - 1, state.offerIndex + 1);
-  state.offer = state.ladder[state.offerIndex];
-  $("mOffer").textContent = state.offer.text;
-};
+$("meaner").onclick = () => { state.offerIndex = Math.max(0, state.offerIndex-1); state.offer = state.ladder[state.offerIndex]; $("mOffer").textContent = state.offer.text; };
+$("sweeter").onclick = () => { state.offerIndex = Math.min(state.ladder.length-1, state.offerIndex+1); state.offer = state.ladder[state.offerIndex]; $("mOffer").textContent = state.offer.text; };
+$("onlySweet").onclick = () => setHeat(1);
+$("uptoWarm").onclick = () => setHeat(3);
+$("allTasks").onclick = () => setHeat(5);
 $("start").onclick = start;
-$("restart").onclick = () => {
-  clearInterval(timer);
-  $("modal").classList.add("hidden");
-  $("setup").classList.remove("hidden");
-  $("game").classList.add("hidden");
-};
+$("restart").onclick = () => { clearInterval(timer); $("modal").classList.add("hidden"); $("setup").classList.remove("hidden"); $("game").classList.add("hidden"); };
+renderPicker();
 </script>
 </body>
 </html>
